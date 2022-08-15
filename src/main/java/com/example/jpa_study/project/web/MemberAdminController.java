@@ -1,9 +1,12 @@
 package com.example.jpa_study.project.web;
 
+import com.example.jpa_study.project.service.MemberHistoryService;
 import com.example.jpa_study.project.service.MemberService;
+import com.example.jpa_study.project.web.dto.ResponseJoinStatusMemberPaging;
 import com.example.jpa_study.project.web.dto.ResponseMemberSaveDto;
 import com.example.jpa_study.project.web.dto.ResponseMembersPaging;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.engine.transaction.spi.JoinStatus;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
@@ -16,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 public class MemberAdminController {
 
     private final MemberService memberService;
+    private final MemberHistoryService memberHistoryService;
 
     @GetMapping("/{email}")
     public ResponseEntity<ResponseMemberSaveDto> getMemberInfo(
@@ -30,5 +34,14 @@ public class MemberAdminController {
             @PageableDefault(size = 5, sort = "name") Pageable pageable) {
         ResponseMembersPaging responseMembersPaging = memberService.getMembers(name, pageable);
         return ResponseEntity.status(HttpStatus.OK).body(responseMembersPaging);
+    }
+
+    @GetMapping("/history")
+    public ResponseEntity<ResponseJoinStatusMemberPaging> getJoinStatusPeopleInfo(
+            @RequestParam("status") JoinStatus joinStatus,
+            @PageableDefault(size = 5, sort = "name") Pageable pageable) {
+        ResponseJoinStatusMemberPaging responseJoinStatusMemberPaging =
+                memberHistoryService.findMemberByStatus(joinStatus, pageable);
+        return ResponseEntity.status(HttpStatus.OK).body(responseJoinStatusMemberPaging);
     }
 }
