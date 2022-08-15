@@ -4,7 +4,7 @@ import com.example.jpa_study.project.error.ErrorCode;
 
 public class ExistsMemberInfoException extends BusinessException {
 
-    public ExistsMemberInfoException(String message, ErrorCode errorCode) {
-        super(message, errorCode);
+    public ExistsMemberInfoException(ErrorCode errorCode) {
+        super(errorCode);
     }
 }

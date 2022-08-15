@@ -38,8 +38,7 @@ public class MemberService {
 
     private void existsMember(String email) {
         if (memberRepository.existsByEmail(email)) {
-            throw new ExistsMemberInfoException(
-                    ErrorCode.EXISTS_MEMBER_INFO.getMessage(), ErrorCode.EXISTS_MEMBER_INFO);
+            throw new ExistsMemberInfoException(ErrorCode.EXISTS_MEMBER_INFO);
         }
     }
 
@@ -69,6 +68,6 @@ public class MemberService {
 
     private Member getEntity(Optional<Member> optionalMember) {
         return optionalMember.orElseThrow(() -> new NotFoundMemberEntityException(
-                ErrorCode.NOT_FOUND_MEMBER_ENTITY.getMessage(), ErrorCode.NOT_FOUND_MEMBER_ENTITY));
+                ErrorCode.NOT_FOUND_MEMBER_ENTITY));
     }
 }

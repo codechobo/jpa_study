@@ -37,8 +37,7 @@ public class MemberHistoryListener {
 
     private static MemberHistory getMemberHistory(MemberHistoryRepository memberHistoryRepository, Member member) {
         return memberHistoryRepository.findById(member.getId())
-                .orElseThrow(() -> new NotFoundMemberEntityException(
-                        ErrorCode.NOT_FOUND_MEMBER_ENTITY.getMessage(), ErrorCode.NOT_FOUND_MEMBER_ENTITY));
+                .orElseThrow(() -> new NotFoundMemberEntityException(ErrorCode.NOT_FOUND_MEMBER_ENTITY));
     }
 
     private static MemberHistory createMemberHistory(Member member) {

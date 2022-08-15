@@ -3,14 +3,17 @@ package com.example.jpa_study.project.domain;
 import com.example.jpa_study.project.domain.base.BaseTimeEntity;
 import com.example.jpa_study.project.error.ErrorCode;
 import com.example.jpa_study.project.error.exception.NotEnoughStockException;
+import lombok.Getter;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+@Getter
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "dtype")
+@Table(name = "ITEMS")
 public abstract class Item extends BaseTimeEntity {
 
     @Id
@@ -18,10 +21,13 @@ public abstract class Item extends BaseTimeEntity {
     @Column(name = "ITEMS_ID")
     private Long id;
 
+    @Column(name = "NAME", nullable = false, unique = true)
     private String name;
 
+    @Column(name = "PRICE")
     private int price;
 
+    @Column(name = "STOCK_QUANTITY")
     private int stockQuantity;
 
     @ManyToMany(mappedBy = "items")
@@ -40,7 +46,7 @@ public abstract class Item extends BaseTimeEntity {
 
     private static void checkStock(int restStock) {
         if (restStock < 0) {
-            throw new NotEnoughStockException(ErrorCode.NOT_ENOUGH_STOCK.getMessage(), ErrorCode.NOT_FOUND_MEMBER_ENTITY);
+            throw new NotEnoughStockException(ErrorCode.NOT_ENOUGH_STOCK);
         }
     }
 
