@@ -1,28 +1,25 @@
 package com.example.jpa_study.project.domain;
 
-
 import com.example.jpa_study.project.domain.base.BaseTimeEntity;
 import com.example.jpa_study.project.domain.type.Address;
-import lombok.*;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.hibernate.engine.transaction.spi.JoinStatus;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
-
-
 
 @Getter
 @EqualsAndHashCode(of = "id")
 @NoArgsConstructor
-@Table(name = "MEMBERS")
+@Table(name = "MEMBERS_HISTORY")
 @Entity
-@EntityListeners(value = MemberHistoryListener.class)
-public class Member extends BaseTimeEntity {
+public class MemberHistory extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "MEMBERS_ID")
+    @Column(name = "MEMBERS_HISTORY_ID")
     private Long id;
 
     @Column(name = "NAME", nullable = false)
@@ -42,21 +39,15 @@ public class Member extends BaseTimeEntity {
             @AttributeOverride(name = "zipcode", column = @Column(name = "MEMBERS_ZIPCODE"))})
     private Address address;
 
-    @OneToMany(mappedBy = "member")
-    private List<Order> orders = new ArrayList<>();
-
     @Builder
-    public Member(String name, String email, Address address) {
+    public MemberHistory(String name, String email, JoinStatus joinStatus, Address address) {
         this.name = name;
         this.email = email;
+        this.joinStatus = joinStatus;
         this.address = address;
     }
 
-    public void updateAddress(Address address) {
-        this.address = address;
-    }
-
-    public void joinStatus(JoinStatus status) {
+    public void updateJoinStatus(JoinStatus status) {
         this.joinStatus = status;
     }
 }
