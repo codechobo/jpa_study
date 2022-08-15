@@ -32,7 +32,7 @@ public class MemberService {
         Member member = requestMemberSaveDto.toEntity();
         member.joinStatus(JoinStatus.JOINED);
 
-        memberRepository.save(requestMemberSaveDto.toEntity());
+        memberRepository.save(member);
         return new ResponseMemberSaveDto(member);
     }
 

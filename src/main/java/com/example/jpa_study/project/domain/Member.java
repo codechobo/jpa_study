@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-@ToString(callSuper = true)
+
 @Getter
 @EqualsAndHashCode(of = "id")
 @NoArgsConstructor

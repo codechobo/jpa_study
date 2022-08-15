@@ -3,11 +3,9 @@ package com.example.jpa_study.project.web.dto;
 import com.example.jpa_study.project.domain.Member;
 import com.example.jpa_study.project.domain.type.Address;
 import lombok.Getter;
-import lombok.ToString;
 
 import java.time.LocalDateTime;
 
-@ToString
 @Getter
 public class ResponseMemberSaveDto {
 
