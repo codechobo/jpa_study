@@ -17,7 +17,12 @@ public enum ErrorCode {
 
     // item
     NOT_ENOUGH_STOCK(HttpStatus.INSUFFICIENT_STORAGE, "재고가 충분하지 않습니다."),
-    EXISTS_ITEM_INFO(HttpStatus.BAD_REQUEST, "이미 존재하는 아이템입니다."),;
+    EXISTS_ITEM_INFO(HttpStatus.BAD_REQUEST, "이미 존재하는 아이템입니다."),
+    ITEM_SAVE_FAIL(HttpStatus.INTERNAL_SERVER_ERROR, "아이템 저장을 실패했습니다."),
+
+    // item type
+    NOT_FOUND_ITEM_TYPE(HttpStatus.BAD_REQUEST, "아이템 타입을 찾을 수 없습니다.");
+
 
     private final HttpStatus httpStatus;
     private final String message;

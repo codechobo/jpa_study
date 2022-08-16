@@ -4,16 +4,18 @@ import com.example.jpa_study.project.domain.base.BaseTimeEntity;
 import com.example.jpa_study.project.error.ErrorCode;
 import com.example.jpa_study.project.error.exception.NotEnoughStockException;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
 @Getter
-@Entity
+@NoArgsConstructor
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "dtype")
 @Table(name = "ITEMS")
+@Entity
 public abstract class Item extends BaseTimeEntity {
 
     @Id
@@ -33,6 +35,12 @@ public abstract class Item extends BaseTimeEntity {
     @ManyToMany(mappedBy = "items")
     private List<Category> categories = new ArrayList<>();
 
+    public Item(String name, int price, int stockQuantity) {
+        this.name = name;
+        this.price = price;
+        this.stockQuantity = stockQuantity;
+    }
+
     // 비지니스 로직
     public void addStock(int quantity) {
         this.stockQuantity += quantity;
@@ -41,13 +49,13 @@ public abstract class Item extends BaseTimeEntity {
     public void removeStock(int quantity) {
         int restStock = this.stockQuantity - quantity;
         checkStock(restStock);
-        this.stockQuantity = restStock;
     }
 
-    private static void checkStock(int restStock) {
+    private void checkStock(int restStock) {
         if (restStock < 0) {
             throw new NotEnoughStockException(ErrorCode.NOT_ENOUGH_STOCK);
+        } else {
+            this.stockQuantity = restStock;
         }
     }
-
 }
