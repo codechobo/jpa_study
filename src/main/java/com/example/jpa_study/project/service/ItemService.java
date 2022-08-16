@@ -8,6 +8,7 @@ import com.example.jpa_study.project.domain.type.ItemType;
 import com.example.jpa_study.project.error.ErrorCode;
 import com.example.jpa_study.project.error.exception.ItemSaveFailException;
 import com.example.jpa_study.project.web.dto.item_dto.RequestItemSaveDto;
+import com.example.jpa_study.project.web.dto.item_dto.RequestSearchItemDto;
 import com.example.jpa_study.project.web.dto.item_dto.ResponseItemSaveDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,7 +22,7 @@ public class ItemService {
 
     @Transactional
     public ResponseItemSaveDto saveItem(String itemType, RequestItemSaveDto requestItemSaveDto) {
-        if (ItemType.typeCheck(itemType) && !isExistsCheck(requestItemSaveDto)) {
+        if (ItemType.typeCheck(itemType) && !isExistsCheck(requestItemSaveDto.getName())) {
 
             if (ItemType.BOOK.getTypeName().equals(itemType)) {
                 Book book = itemRepository.save(requestItemSaveDto.toBookEntity());
@@ -42,8 +43,13 @@ public class ItemService {
         throw new ItemSaveFailException(ErrorCode.ITEM_SAVE_FAIL);
     }
 
-    private boolean isExistsCheck(RequestItemSaveDto requestItemSaveDto) {
-        return itemRepository.existsByName(requestItemSaveDto.getName());
+    private boolean isExistsCheck(String itemName) {
+        return itemRepository.existsByName(itemName);
     }
 
+    public void findItem(RequestSearchItemDto requestSearchItemDto) {
+        if(isExistsCheck(requestSearchItemDto.getItemName())) {
+
+        }
+    }
 }
