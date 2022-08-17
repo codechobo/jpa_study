@@ -1,4 +1,4 @@
-package com.example.jpa_study.project.web.dto.item_dto;
+package com.example.jpa_study.project.web.dto.item_dto.response;
 
 import com.example.jpa_study.project.domain.Movie;
 import lombok.Getter;

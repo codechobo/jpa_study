@@ -2,9 +2,9 @@ package com.example.jpa_study.project.web;
 
 import com.example.jpa_study.project.service.MemberHistoryService;
 import com.example.jpa_study.project.service.MemberService;
-import com.example.jpa_study.project.web.dto.ResponseJoinStatusMemberPaging;
-import com.example.jpa_study.project.web.dto.ResponseMemberSaveDto;
-import com.example.jpa_study.project.web.dto.ResponseMembersPaging;
+import com.example.jpa_study.project.web.dto.member_dto.response.ResponseJoinStatusMemberPaging;
+import com.example.jpa_study.project.web.dto.member_dto.response.ResponseMemberSaveDto;
+import com.example.jpa_study.project.web.dto.member_dto.response.ResponseMembersPaging;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.engine.transaction.spi.JoinStatus;
 import org.springframework.data.domain.Pageable;

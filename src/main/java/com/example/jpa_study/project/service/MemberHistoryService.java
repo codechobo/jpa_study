@@ -2,7 +2,7 @@ package com.example.jpa_study.project.service;
 
 import com.example.jpa_study.project.domain.MemberHistory;
 import com.example.jpa_study.project.domain.repository.MemberHistoryRepository;
-import com.example.jpa_study.project.web.dto.ResponseJoinStatusMemberPaging;
+import com.example.jpa_study.project.web.dto.member_dto.response.ResponseJoinStatusMemberPaging;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.engine.transaction.spi.JoinStatus;
 import org.springframework.data.domain.Page;

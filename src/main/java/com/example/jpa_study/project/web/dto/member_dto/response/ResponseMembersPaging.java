@@ -1,4 +1,4 @@
-package com.example.jpa_study.project.web.dto;
+package com.example.jpa_study.project.web.dto.member_dto.response;
 
 import com.example.jpa_study.project.domain.Member;
 import lombok.Getter;

@@ -1,7 +1,9 @@
 package com.example.jpa_study.project.web;
 
 import com.example.jpa_study.project.service.MemberService;
-import com.example.jpa_study.project.web.dto.*;
+import com.example.jpa_study.project.web.dto.member_dto.request.RequestMemberSaveDto;
+import com.example.jpa_study.project.web.dto.member_dto.request.RequestMemberUpdateDto;
+import com.example.jpa_study.project.web.dto.member_dto.response.ResponseMemberSaveDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

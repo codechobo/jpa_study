@@ -2,8 +2,8 @@ package com.example.jpa_study.project.domain.repository;
 
 import com.example.jpa_study.project.domain.Member;
 import com.example.jpa_study.project.domain.type.Address;
-import com.example.jpa_study.project.web.dto.ResponseMemberSaveDto;
-import com.example.jpa_study.project.web.dto.ResponseMembersPaging;
+import com.example.jpa_study.project.web.dto.member_dto.response.ResponseMemberSaveDto;
+import com.example.jpa_study.project.web.dto.member_dto.response.ResponseMembersPaging;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
