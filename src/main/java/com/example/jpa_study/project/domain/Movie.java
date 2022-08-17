@@ -10,7 +10,7 @@ import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 
 @Getter
-@DiscriminatorValue("MOVIE")
+@DiscriminatorValue("M")
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity

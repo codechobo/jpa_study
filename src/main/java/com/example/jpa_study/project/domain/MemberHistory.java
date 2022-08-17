@@ -3,7 +3,6 @@ package com.example.jpa_study.project.domain;
 import com.example.jpa_study.project.domain.base.BaseTimeEntity;
 import com.example.jpa_study.project.domain.type.Address;
 import lombok.Builder;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.engine.transaction.spi.JoinStatus;
@@ -11,7 +10,6 @@ import org.hibernate.engine.transaction.spi.JoinStatus;
 import javax.persistence.*;
 
 @Getter
-@EqualsAndHashCode(of = "id")
 @NoArgsConstructor
 @Table(name = "MEMBERS_HISTORY")
 @Entity

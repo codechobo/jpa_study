@@ -11,7 +11,7 @@ import javax.persistence.Entity;
 
 @Getter
 @NoArgsConstructor
-@DiscriminatorValue("ALBUM")
+@DiscriminatorValue("A")
 @Entity
 public class Album extends Item {
 

@@ -1,10 +1,7 @@
 package com.example.jpa_study.project.web;
 
 import com.example.jpa_study.project.service.ItemService;
-import com.example.jpa_study.project.web.dto.item_dto.RequestItemSaveDto;
-import com.example.jpa_study.project.web.dto.item_dto.RequestSearchItemDto;
-import com.example.jpa_study.project.web.dto.item_dto.ResponseBookDto;
-import com.example.jpa_study.project.web.dto.item_dto.ResponseItemSaveDto;
+import com.example.jpa_study.project.web.dto.item_dto.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,11 +22,24 @@ public class ItemController {
         return ResponseEntity.status(HttpStatus.CREATED).body(responseItemSaveDto);
     }
 
-    @GetMapping
-    public ResponseEntity<ResponseBookDto> getItem(
-            @RequestBody RequestSearchItemDto requestSearchItemDto) {
-        itemService.findItem(requestSearchItemDto);
-        return null;
+    @GetMapping("/book")
+    public ResponseEntity<ResponseBookDto> getBook(
+            @RequestParam("name") String bookName) {
+        ResponseBookDto book = itemService.findBook(bookName);
+        return ResponseEntity.status(HttpStatus.OK).body(book);
     }
 
+    @GetMapping("/album")
+    public ResponseEntity<ResponseAlbumDto> getAlbum(
+            @RequestParam("name") String albumName) {
+        ResponseAlbumDto album = itemService.findAlbum(albumName);
+        return ResponseEntity.status(HttpStatus.OK).body(album);
+    }
+
+    @GetMapping("/movie")
+    public ResponseEntity<ResponseMovieDto> getMovie(
+            @RequestParam("name") String movieName) {
+        ResponseMovieDto movie = itemService.findMovie(movieName);
+        return ResponseEntity.status(HttpStatus.OK).body(movie);
+    }
 }

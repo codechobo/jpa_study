@@ -32,6 +32,9 @@ public abstract class Item extends BaseTimeEntity {
     @Column(name = "STOCK_QUANTITY")
     private int stockQuantity;
 
+    @Column(name = "DTYPE", insertable = false, updatable = false)
+    private String dtype;
+
     @ManyToMany(mappedBy = "items")
     private List<Category> categories = new ArrayList<>();
 
