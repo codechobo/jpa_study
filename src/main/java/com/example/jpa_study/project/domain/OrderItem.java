@@ -29,4 +29,12 @@ public class OrderItem {
     public void addOrder(Order order) {
         this.order = order;
     }
+
+    public void cancel() {
+        getItem().addStock(count);
+    }
+
+    public int getTotalPrice() {
+        return getOrderPrice() * getCount();
+    }
 }

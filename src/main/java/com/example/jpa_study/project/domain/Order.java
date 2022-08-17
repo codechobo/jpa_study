@@ -1,7 +1,11 @@
 package com.example.jpa_study.project.domain;
 
 import com.example.jpa_study.project.domain.base.BaseTimeEntity;
+import com.example.jpa_study.project.domain.type.DeliveryStatus;
 import com.example.jpa_study.project.domain.type.OrderStatus;
+import com.example.jpa_study.project.error.ErrorCode;
+import com.example.jpa_study.project.error.exception.DeliveryCompletedItemException;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -9,15 +13,6 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-
-// 주문한 회원 정보를 연관관계 없이 매핑 해보기인데?
-
-// 주문한 회원 정보를
-// - members table 에 email 필드를
-
-
-// 연관관계 없이 조인
-// 1. 쿼리를 새엇ㅇ
 
 @Getter
 @NoArgsConstructor
@@ -44,6 +39,14 @@ public class Order extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private OrderStatus status;
 
+    @Builder
+    public Order(Member member, List<OrderItem> orderItems, Delivery delivery, OrderStatus status) {
+        this.member = member;
+        this.orderItems = orderItems;
+        this.delivery = delivery;
+        this.status = status;
+    }
+
     public void addMember(Member member) {
         this.member = member;
         member.getOrders().add(this);
@@ -57,5 +60,38 @@ public class Order extends BaseTimeEntity {
     public void addDelivery(Delivery delivery) {
         this.delivery = delivery;
         delivery.addOrder(this);
+    }
+
+    public void updateStatus(OrderStatus status) {
+        this.status = status;
+    }
+
+    public static Order createOrder(Member member, Delivery delivery, List<OrderItem> orderItems) {
+        Order order = new Order();
+        order.addMember(member);
+        order.addDelivery(delivery);
+
+        for (OrderItem orderItem : orderItems) {
+            order.addOrderItem(orderItem);
+        }
+
+        order.updateStatus(OrderStatus.ORDER);
+
+        return order;
+    }
+
+    public void cancel() {
+        if (delivery.getStatus().equals(DeliveryStatus.COMP)) {
+            throw new DeliveryCompletedItemException(ErrorCode.CAN_NOT_CANCEL);
+        }
+
+        this.updateStatus(OrderStatus.CANSEL);
+        for (OrderItem orderItem : orderItems) {
+            orderItem.cancel();
+        }
+    }
+
+    public int getTotalPrice() {
+        return this.orderItems.stream().mapToInt(OrderItem::getTotalPrice).sum();
     }
 }

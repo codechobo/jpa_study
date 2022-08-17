@@ -14,9 +14,11 @@ public enum ErrorCode {
 
     // order
     NOT_FOUND_ORDER_ENTITY(HttpStatus.NOT_FOUND, "존재하지 않는 주문입니다."),
+    CAN_NOT_CANCEL(HttpStatus.BAD_REQUEST, "배송 완료된 아이템은 취소할 수 없습니다."),
+
 
     // item
-    NOT_ENOUGH_STOCK(HttpStatus.INSUFFICIENT_STORAGE, "재고가 충분하지 않습니다."),
+    NOT_ENOUGH_STOCK(HttpStatus.BAD_REQUEST, "재고가 충분하지 않습니다."),
     NOT_FOUND_ITEM_ENTITY(HttpStatus.NOT_FOUND, "존재하지 않는 아이템입니다."),
     EXISTS_ITEM_INFO(HttpStatus.BAD_REQUEST, "이미 존재하는 아이템입니다."),
     ITEM_SAVE_FAIL(HttpStatus.INTERNAL_SERVER_ERROR, "아이템 저장을 실패했습니다."),
