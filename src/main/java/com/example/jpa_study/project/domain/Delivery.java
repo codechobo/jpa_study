@@ -2,12 +2,15 @@ package com.example.jpa_study.project.domain;
 
 import com.example.jpa_study.project.domain.type.Address;
 import com.example.jpa_study.project.domain.type.DeliveryStatus;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
 @Getter
 @Table(name = "DELIVERIES")
+@NoArgsConstructor
 @Entity
 public class Delivery {
 
@@ -31,5 +34,12 @@ public class Delivery {
 
     public void addOrder(Order order) {
         this.order = order;
+    }
+
+    @Builder
+    public Delivery(Order order, Address address, DeliveryStatus status) {
+        this.order = order;
+        this.address = address;
+        this.status = status;
     }
 }

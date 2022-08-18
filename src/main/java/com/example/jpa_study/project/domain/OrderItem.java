@@ -1,10 +1,13 @@
 package com.example.jpa_study.project.domain;
 
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
 @Getter
+@NoArgsConstructor
 @Entity
 @Table(name = "ORDERS_ITEMS")
 public class OrderItem {
@@ -25,6 +28,26 @@ public class OrderItem {
     private int orderPrice;
 
     private int count;
+
+    @Builder
+    public OrderItem(Item item, Order order, int orderPrice, int count) {
+        this.item = item;
+        this.order = order;
+        this.orderPrice = orderPrice;
+        this.count = count;
+    }
+
+    public static OrderItem createOrderItem(Item item, int orderPrice, int count) {
+        OrderItem orderItem = OrderItem.builder()
+                .item(item)
+                .orderPrice(orderPrice)
+                .count(count)
+                .build();
+
+        item.removeStock(count);
+
+        return orderItem;
+    }
 
     public void addOrder(Order order) {
         this.order = order;

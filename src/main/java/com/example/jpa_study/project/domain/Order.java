@@ -5,6 +5,7 @@ import com.example.jpa_study.project.domain.type.DeliveryStatus;
 import com.example.jpa_study.project.domain.type.OrderStatus;
 import com.example.jpa_study.project.error.ErrorCode;
 import com.example.jpa_study.project.error.exception.DeliveryCompletedItemException;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -30,6 +31,7 @@ public class Order extends BaseTimeEntity {
     private Member member;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
+    @JsonBackReference
     private List<OrderItem> orderItems = new ArrayList<>();
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -81,13 +83,16 @@ public class Order extends BaseTimeEntity {
     }
 
     public void cancel() {
-        if (delivery.getStatus().equals(DeliveryStatus.COMP)) {
-            throw new DeliveryCompletedItemException(ErrorCode.CAN_NOT_CANCEL);
-        }
-
+        isDeliveryCompleted();
         this.updateStatus(OrderStatus.CANSEL);
         for (OrderItem orderItem : orderItems) {
             orderItem.cancel();
+        }
+    }
+
+    private void isDeliveryCompleted() {
+        if (delivery.getStatus().equals(DeliveryStatus.COMP)) {
+            throw new DeliveryCompletedItemException(ErrorCode.CAN_NOT_CANCEL);
         }
     }
 

@@ -5,12 +5,14 @@ import com.example.jpa_study.project.error.ErrorCode;
 import com.example.jpa_study.project.error.exception.NotEnoughStockException;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
 @Getter
+@DynamicUpdate
 @NoArgsConstructor
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "dtype")
