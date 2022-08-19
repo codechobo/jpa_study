@@ -69,15 +69,16 @@ public class Order extends BaseTimeEntity {
     }
 
     public static Order createOrder(Member member, Delivery delivery, List<OrderItem> orderItems) {
-        Order order = new Order();
-        order.addMember(member);
-        order.addDelivery(delivery);
+        Order order = Order.builder()
+                .member(member)
+                .delivery(delivery)
+                .orderItems(orderItems)
+                .status(OrderStatus.ORDER)
+                .build();
 
         for (OrderItem orderItem : orderItems) {
-            order.addOrderItem(orderItem);
+            orderItem.addOrder(order);
         }
-
-        order.updateStatus(OrderStatus.ORDER);
 
         return order;
     }

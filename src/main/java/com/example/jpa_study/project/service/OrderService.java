@@ -8,6 +8,8 @@ import com.example.jpa_study.project.domain.type.DeliveryStatus;
 import com.example.jpa_study.project.error.ErrorCode;
 import com.example.jpa_study.project.error.exception.NotFoundItemEntityException;
 import com.example.jpa_study.project.error.exception.NotFoundMemberEntityException;
+import com.example.jpa_study.project.error.exception.NotFoundOrderEntityException;
+import com.example.jpa_study.project.web.dto.order_dto.RequestOrderSaveDto;
 import com.example.jpa_study.project.web.dto.order_dto.ResponseOrderDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -25,12 +27,12 @@ public class OrderService {
     private final ItemRepository itemRepository;
 
     @Transactional
-    public ResponseOrderDto saveOrder(Long memberId, Long itemId, int count) {
+    public ResponseOrderDto saveOrder(RequestOrderSaveDto requestOrderSaveDto) {
         // 엔티티 조회
-        Member member = memberRepository.findById(memberId)
+        Member member = memberRepository.findById(requestOrderSaveDto.getMemberId())
                 .orElseThrow(() -> new NotFoundMemberEntityException(ErrorCode.NOT_FOUND_MEMBER_ENTITY));
 
-        Item item = itemRepository.findById(itemId)
+        Item item = itemRepository.findById(requestOrderSaveDto.getItemId())
                 .orElseThrow(() -> new NotFoundItemEntityException(ErrorCode.NOT_FOUND_ITEM_TYPE));
 
         // 배송정보 생성
@@ -40,17 +42,26 @@ public class OrderService {
                 .build();
 
         // 주문상품 생성
-        OrderItem orderItem = OrderItem.createOrderItem(item, item.getPrice(), count);
+        OrderItem orderItem = OrderItem.createOrderItem(item, requestOrderSaveDto.getOrderQuantity());
 
         Order order = Order.createOrder(member, delivery, List.of(orderItem));
-        orderRepository.save(order);
+        Order saveOrder = orderRepository.save(order);
 
-        return new ResponseOrderDto(order);
+        return new ResponseOrderDto(saveOrder);
     }
 
     public List<ResponseOrderDto> getOrderList() {
         return orderRepository.findAll().stream()
                 .map(ResponseOrderDto::new)
                 .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public Long cancel(Long orderId) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new NotFoundOrderEntityException(ErrorCode.NOT_FOUND_ORDER_ENTITY));
+
+        order.cancel();
+        return order.getId();
     }
 }

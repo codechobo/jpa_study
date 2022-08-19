@@ -25,8 +25,10 @@ public class OrderItem {
     @JoinColumn(name = "ORDERS_ID")
     private Order order;
 
+    @Column(name = "ORDER_PRICE")
     private int orderPrice;
 
+    @Column(name = "COUNT")
     private int count;
 
     @Builder
@@ -37,15 +39,14 @@ public class OrderItem {
         this.count = count;
     }
 
-    public static OrderItem createOrderItem(Item item, int orderPrice, int count) {
+    public static OrderItem createOrderItem(Item item, int count) {
         OrderItem orderItem = OrderItem.builder()
                 .item(item)
-                .orderPrice(orderPrice)
+                .orderPrice(item.getPrice())
                 .count(count)
                 .build();
 
         item.removeStock(count);
-
         return orderItem;
     }
 
