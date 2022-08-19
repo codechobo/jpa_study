@@ -1,23 +1,19 @@
 package com.example.jpa_study.project.service;
 
-import com.example.jpa_study.project.domain.Album;
-import com.example.jpa_study.project.domain.Book;
-import com.example.jpa_study.project.domain.Movie;
+import com.example.jpa_study.project.domain.Item;
 import com.example.jpa_study.project.domain.repository.ItemRepository;
-import com.example.jpa_study.project.domain.type.ItemType;
 import com.example.jpa_study.project.error.ErrorCode;
 import com.example.jpa_study.project.error.exception.ExistsItemInfoException;
 import com.example.jpa_study.project.error.exception.ItemSaveFailException;
 import com.example.jpa_study.project.error.exception.NotFoundItemEntityException;
+import com.example.jpa_study.project.service.item_converter.ItemConverter;
 import com.example.jpa_study.project.web.dto.item_dto.request.RequestItemSaveDto;
-import com.example.jpa_study.project.web.dto.item_dto.response.ResponseAlbumDto;
-import com.example.jpa_study.project.web.dto.item_dto.response.ResponseBookDto;
 import com.example.jpa_study.project.web.dto.item_dto.response.ResponseItemSaveDto;
-import com.example.jpa_study.project.web.dto.item_dto.response.ResponseMovieDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -25,52 +21,38 @@ import java.util.Optional;
 public class ItemService {
 
     private final ItemRepository itemRepository;
+    private final List<ItemConverter> itemConverterList;
 
     @Transactional
-    public ResponseItemSaveDto saveItem(String itemType, RequestItemSaveDto requestItemSaveDto) {
-        if (ItemType.typeCheck(itemType) && isExistsCheck(requestItemSaveDto.getName())) {
+    public ResponseItemSaveDto saveItem(RequestItemSaveDto requestItemSaveDto) {
+        if (isNotExistsItem(requestItemSaveDto)) {
+            ItemConverter itemConverter = itemConverterList.stream()
+                    .filter(it -> it.isTypeCheck(requestItemSaveDto.getItemType()))
+                    .findFirst()
+                    .orElseThrow(() -> new IllegalArgumentException("itemType 을 지원하는 converter 가 존재하지 않습니다"));
 
-            if (ItemType.BOOK.getTypeName().equals(itemType)) {
-                Book book = itemRepository.save(requestItemSaveDto.toBookEntity());
-                return new ResponseItemSaveDto(book);
-            }
+            Item item = itemConverter.convertItem(requestItemSaveDto);
 
-            if (ItemType.ALBUM.getTypeName().equals(itemType)) {
-                Album album = itemRepository.save(requestItemSaveDto.toAlbumEntity());
-                return new ResponseItemSaveDto(album);
-            }
-
-            if (ItemType.MOVIE.getTypeName().equals(itemType)) {
-                Movie movie = itemRepository.save(requestItemSaveDto.toMovieEntity());
-                return new ResponseItemSaveDto(movie);
-            }
+            Item saveItem = itemRepository.save(item);
+            return new ResponseItemSaveDto(saveItem);
         }
         throw new ItemSaveFailException(ErrorCode.ITEM_SAVE_FAIL);
     }
 
-    private boolean isExistsCheck(String itemName) {
-        if (itemRepository.existsByName(itemName)) {
+    private boolean isNotExistsItem(RequestItemSaveDto dto) {
+        if (itemRepository.existsByName(dto.getName())) {
             throw new ExistsItemInfoException(ErrorCode.EXISTS_ITEM_INFO);
         }
         return true;
     }
 
-    public ResponseBookDto findBook(String bookName) {
-        Book book = getOptional(itemRepository.findBookByName(bookName));
-        return new ResponseBookDto(book);
-    }
-
-    public ResponseAlbumDto findAlbum(String albumName) {
-        Album album = getOptional(itemRepository.findAlbumByName(albumName));
-        return new ResponseAlbumDto(album);
-    }
-
-    public ResponseMovieDto findMovie(String movieName) {
-        Movie movie = getOptional(itemRepository.findMovieByName(movieName));
-        return new ResponseMovieDto(movie);
-    }
-
     private <T> T getOptional(Optional<T> optional) {
-        return optional.orElseThrow(() -> new NotFoundItemEntityException(ErrorCode.NOT_FOUND_ITEM_ENTITY));
+        return optional
+                .orElseThrow(() -> new NotFoundItemEntityException(ErrorCode.NOT_FOUND_ITEM_ENTITY));
+    }
+
+    public ResponseItemSaveDto findItem(Long itemId) {
+        Item item = getOptional(itemRepository.findById(itemId));
+        return new ResponseItemSaveDto(item);
     }
 }

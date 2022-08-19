@@ -1,9 +1,9 @@
 package com.example.jpa_study.project.domain.type;
 
-import com.example.jpa_study.project.error.ErrorCode;
-import com.example.jpa_study.project.error.exception.NotFoundItemTypeException;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+
+import java.util.Arrays;
 
 @Getter
 @RequiredArgsConstructor
@@ -16,12 +16,8 @@ public enum ItemType {
     private final String typeName;
 
     public static boolean typeCheck(String typeName) {
-        for (ItemType itemType : ItemType.values()) {
-            if (itemType.getTypeName().equalsIgnoreCase(typeName)) {
-                return true;
-            }
-        }
-        throw new NotFoundItemTypeException(ErrorCode.NOT_FOUND_ITEM_TYPE);
+        return Arrays.stream(values())
+                .anyMatch(itemType -> itemType.typeName.equals(typeName));
     }
 
 }

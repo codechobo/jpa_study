@@ -15,7 +15,7 @@ import java.util.List;
 @DynamicUpdate
 @NoArgsConstructor
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name = "dtype")
+@DiscriminatorColumn(name = "DTYPE")
 @Table(name = "ITEMS")
 @Entity
 public abstract class Item extends BaseTimeEntity {
@@ -25,7 +25,7 @@ public abstract class Item extends BaseTimeEntity {
     @Column(name = "ITEMS_ID")
     private Long id;
 
-    @Column(name = "NAME", nullable = false, unique = true)
+    @Column(name = "NAME", nullable = false)
     private String name;
 
     @Column(name = "PRICE")
@@ -33,9 +33,6 @@ public abstract class Item extends BaseTimeEntity {
 
     @Column(name = "STOCK_QUANTITY")
     private int stockQuantity;
-
-    @Column(name = "DTYPE", insertable = false, updatable = false)
-    private String dtype;
 
     @ManyToMany(mappedBy = "items")
     private List<Category> categories = new ArrayList<>();

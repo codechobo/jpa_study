@@ -3,17 +3,21 @@ package com.example.jpa_study.project.web.dto.item_dto.request;
 import com.example.jpa_study.project.domain.Album;
 import com.example.jpa_study.project.domain.Book;
 import com.example.jpa_study.project.domain.Movie;
+import com.example.jpa_study.project.domain.type.ItemType;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 
 @Getter
 public class RequestItemSaveDto {
 
-    // common
     @NotNull
+    private ItemType itemType;
+
+    @NotEmpty
     @JsonProperty
     private String name;
 
@@ -73,5 +77,4 @@ public class RequestItemSaveDto {
                 .director(this.director)
                 .build();
     }
-
 }
