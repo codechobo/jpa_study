@@ -1,8 +1,5 @@
 package com.example.jpa_study.project.web.dto.item_dto.request;
 
-import com.example.jpa_study.project.domain.Album;
-import com.example.jpa_study.project.domain.Book;
-import com.example.jpa_study.project.domain.Movie;
 import com.example.jpa_study.project.domain.type.ItemType;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
@@ -48,33 +45,4 @@ public class RequestItemSaveDto {
     @JsonProperty
     private String etc;
 
-    public Book toBookEntity() {
-        return Book.builder()
-                .name(this.name)
-                .price(this.price)
-                .stockQuantity(this.stockQuantity)
-                .author(this.author)
-                .isbn(this.isbn)
-                .build();
-    }
-
-    public Album toAlbumEntity() {
-        return Album.builder()
-                .name(this.name)
-                .price(this.price)
-                .stockQuantity(this.stockQuantity)
-                .etc(this.etc)
-                .artist(this.artist)
-                .build();
-    }
-
-    public Movie toMovieEntity() {
-        return Movie.builder()
-                .name(this.name)
-                .price(this.price)
-                .stockQuantity(this.stockQuantity)
-                .actor(this.actor)
-                .director(this.director)
-                .build();
-    }
 }

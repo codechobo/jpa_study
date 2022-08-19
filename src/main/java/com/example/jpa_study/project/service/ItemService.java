@@ -7,6 +7,7 @@ import com.example.jpa_study.project.error.exception.ExistsItemInfoException;
 import com.example.jpa_study.project.error.exception.ItemSaveFailException;
 import com.example.jpa_study.project.error.exception.NotFoundItemEntityException;
 import com.example.jpa_study.project.service.item_converter.ItemConverter;
+import com.example.jpa_study.project.service.item_converter.dto.ServiceItemDto;
 import com.example.jpa_study.project.web.dto.item_dto.request.RequestItemSaveDto;
 import com.example.jpa_study.project.web.dto.item_dto.response.ResponseItemSaveDto;
 import lombok.RequiredArgsConstructor;
@@ -31,7 +32,8 @@ public class ItemService {
                     .findFirst()
                     .orElseThrow(() -> new IllegalArgumentException("itemType 을 지원하는 converter 가 존재하지 않습니다"));
 
-            Item item = itemConverter.convertItem(requestItemSaveDto);
+            ServiceItemDto serviceItemDto = new ServiceItemDto(requestItemSaveDto);
+            Item item = itemConverter.convertItem(serviceItemDto);
 
             Item saveItem = itemRepository.save(item);
             return new ResponseItemSaveDto(saveItem);
@@ -46,13 +48,13 @@ public class ItemService {
         return true;
     }
 
-    private <T> T getOptional(Optional<T> optional) {
-        return optional
-                .orElseThrow(() -> new NotFoundItemEntityException(ErrorCode.NOT_FOUND_ITEM_ENTITY));
-    }
-
     public ResponseItemSaveDto findItem(Long itemId) {
         Item item = getOptional(itemRepository.findById(itemId));
         return new ResponseItemSaveDto(item);
+    }
+
+    private <T> T getOptional(Optional<T> optional) {
+        return optional
+                .orElseThrow(() -> new NotFoundItemEntityException(ErrorCode.NOT_FOUND_ITEM_ENTITY));
     }
 }

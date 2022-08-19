@@ -2,7 +2,7 @@ package com.example.jpa_study.project.service.item_converter;
 
 import com.example.jpa_study.project.domain.Item;
 import com.example.jpa_study.project.domain.type.ItemType;
-import com.example.jpa_study.project.web.dto.item_dto.request.RequestItemSaveDto;
+import com.example.jpa_study.project.service.item_converter.dto.ServiceItemDto;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -13,7 +13,7 @@ public class AlbumItemConverter implements ItemConverter {
     }
 
     @Override
-    public Item convertItem(RequestItemSaveDto requestItemSaveDto) {
-        return requestItemSaveDto.toAlbumEntity();
+    public Item convertItem(ServiceItemDto serviceItemDto) {
+        return serviceItemDto.toAlbumEntity();
     }
 }
