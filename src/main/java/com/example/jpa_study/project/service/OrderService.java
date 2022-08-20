@@ -1,15 +1,17 @@
 package com.example.jpa_study.project.service;
 
-import com.example.jpa_study.project.domain.*;
+import com.example.jpa_study.project.domain.Item;
+import com.example.jpa_study.project.domain.Member;
+import com.example.jpa_study.project.domain.Order;
 import com.example.jpa_study.project.domain.repository.ItemRepository;
 import com.example.jpa_study.project.domain.repository.MemberRepository;
 import com.example.jpa_study.project.domain.repository.OrderRepository;
-import com.example.jpa_study.project.domain.type.DeliveryStatus;
 import com.example.jpa_study.project.error.ErrorCode;
 import com.example.jpa_study.project.error.exception.BusinessException;
 import com.example.jpa_study.project.error.exception.NotFoundItemEntityException;
 import com.example.jpa_study.project.error.exception.NotFoundMemberEntityException;
 import com.example.jpa_study.project.error.exception.NotFoundOrderEntityException;
+import com.example.jpa_study.project.service.factory.EntityFactory;
 import com.example.jpa_study.project.web.dto.order_dto.RequestOrderSaveDto;
 import com.example.jpa_study.project.web.dto.order_dto.ResponseOrderDto;
 import lombok.RequiredArgsConstructor;
@@ -35,17 +37,11 @@ public class OrderService {
         Item item = findItemEntity(requestOrderSaveDto);
 
         // 생성
-        Delivery delivery = createDelivery(member);
-        OrderItem orderItem = OrderItem.createOrderItem(item, requestOrderSaveDto.getOrderQuantity());
-        Order order = Order.createOrder(member, delivery, List.of(orderItem));
+        Order order = EntityFactory.createOrderInfo(member, item, requestOrderSaveDto);
 
         // 저장
         Order saveOrder = orderRepository.save(order);
         return new ResponseOrderDto(saveOrder);
-    }
-
-    private static Delivery createDelivery(Member member) {
-        return Delivery.createDelivery(member.getAddress(), DeliveryStatus.READY);
     }
 
     private Item findItemEntity(RequestOrderSaveDto requestOrderSaveDto) {
