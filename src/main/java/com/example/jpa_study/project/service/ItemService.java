@@ -27,19 +27,26 @@ public class ItemService {
     @Transactional
     public ResponseItemSaveDto saveItem(RequestItemSaveDto requestItemSaveDto) {
         if (isNotExistsItem(requestItemSaveDto)) {
+            ServiceItemDto serviceItemDto = createServiceItemDto(requestItemSaveDto);
 
-            ItemConverter itemConverter = itemConverterList.stream()
-                    .filter(it -> it.isTypeCheck(requestItemSaveDto.getItemType()))
-                    .findFirst()
-                    .orElseThrow(() -> new IllegalArgumentException("itemType 을 지원하는 converter 가 존재하지 않습니다"));
-
-            ServiceItemDto serviceItemDto = new ServiceItemDto(requestItemSaveDto);
-            Item item = itemConverter.convertItem(serviceItemDto);
+            Item item = itemConverter(requestItemSaveDto, serviceItemDto);
 
             Item saveItem = itemRepository.save(item);
             return new ResponseItemSaveDto(saveItem);
         }
         throw new ItemSaveFailException(ErrorCode.ITEM_SAVE_FAIL);
+    }
+
+    private Item itemConverter(RequestItemSaveDto requestItemSaveDto, ServiceItemDto serviceItemDto) {
+        return itemConverterList.stream()
+                .filter(it -> it.isTypeCheck(requestItemSaveDto.getItemType()))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("itemType 을 지원하는 converter 가 존재하지 않습니다"))
+                .convertItem(serviceItemDto);
+    }
+
+    private ServiceItemDto createServiceItemDto(RequestItemSaveDto requestItemSaveDto) {
+        return new ServiceItemDto(requestItemSaveDto);
     }
 
     private boolean isNotExistsItem(RequestItemSaveDto dto) {
