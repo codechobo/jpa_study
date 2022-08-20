@@ -7,6 +7,7 @@ import com.example.jpa_study.project.service.item_converter.dto.ServiceItemDto;
 public interface ItemConverter {
 
     boolean isTypeCheck(ItemType itemType);
-    <T extends Item> T convertItem(ServiceItemDto serviceItemDto);
+    boolean isFieldCheck(ServiceItemDto serviceItemDto);
+    Item convertItem(ServiceItemDto serviceItemDto);
 
 }

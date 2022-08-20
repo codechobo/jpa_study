@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @RestController
 @RequiredArgsConstructor
 public class ItemController {
@@ -15,7 +17,7 @@ public class ItemController {
     private final ItemService itemService;
 
     @PostMapping("/items")
-    public ResponseEntity<ResponseItemSaveDto> createItem(@RequestBody RequestItemSaveDto requestItemSaveDto) {
+    public ResponseEntity<ResponseItemSaveDto> createItem(@Valid @RequestBody RequestItemSaveDto requestItemSaveDto) {
         ResponseItemSaveDto responseItemSaveDto = itemService.saveItem(requestItemSaveDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(responseItemSaveDto);
     }

@@ -29,7 +29,7 @@ public class ItemService {
         if (isNotExistsItem(requestItemSaveDto)) {
             ServiceItemDto serviceItemDto = createServiceItemDto(requestItemSaveDto);
 
-            Item item = itemConverter(requestItemSaveDto, serviceItemDto);
+            Item item = itemConverter(serviceItemDto);
 
             Item saveItem = itemRepository.save(item);
             return new ResponseItemSaveDto(saveItem);
@@ -37,9 +37,10 @@ public class ItemService {
         throw new ItemSaveFailException(ErrorCode.ITEM_SAVE_FAIL);
     }
 
-    private Item itemConverter(RequestItemSaveDto requestItemSaveDto, ServiceItemDto serviceItemDto) {
+    private Item itemConverter(ServiceItemDto serviceItemDto) {
         return itemConverterList.stream()
-                .filter(it -> it.isTypeCheck(requestItemSaveDto.getItemType()))
+                .filter(itemConverter -> itemConverter.isTypeCheck(serviceItemDto.getItemType()))
+                .filter(itemConverter -> itemConverter.isFieldCheck(serviceItemDto))
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("itemType 을 지원하는 converter 가 존재하지 않습니다"))
                 .convertItem(serviceItemDto);

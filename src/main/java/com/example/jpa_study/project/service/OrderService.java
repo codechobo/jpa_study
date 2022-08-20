@@ -32,14 +32,11 @@ public class OrderService {
 
     @Transactional
     public ResponseOrderDto saveOrder(RequestOrderSaveDto requestOrderSaveDto) {
-        // 조회
         Member member = findMemberEntity(requestOrderSaveDto);
         Item item = findItemEntity(requestOrderSaveDto);
 
-        // 생성
         Order order = EntityFactory.createOrderInfo(member, item, requestOrderSaveDto);
 
-        // 저장
         Order saveOrder = orderRepository.save(order);
         return new ResponseOrderDto(saveOrder);
     }
