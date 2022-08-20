@@ -42,4 +42,11 @@ public class Delivery {
         this.address = address;
         this.status = status;
     }
+
+    public static Delivery createDelivery(Address address, DeliveryStatus status) {
+        return Delivery.builder()
+                .address(address)
+                .status(status)
+                .build();
+    }
 }

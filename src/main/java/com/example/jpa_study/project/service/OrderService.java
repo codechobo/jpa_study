@@ -6,6 +6,7 @@ import com.example.jpa_study.project.domain.repository.MemberRepository;
 import com.example.jpa_study.project.domain.repository.OrderRepository;
 import com.example.jpa_study.project.domain.type.DeliveryStatus;
 import com.example.jpa_study.project.error.ErrorCode;
+import com.example.jpa_study.project.error.exception.BusinessException;
 import com.example.jpa_study.project.error.exception.NotFoundItemEntityException;
 import com.example.jpa_study.project.error.exception.NotFoundMemberEntityException;
 import com.example.jpa_study.project.error.exception.NotFoundOrderEntityException;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -28,26 +30,36 @@ public class OrderService {
 
     @Transactional
     public ResponseOrderDto saveOrder(RequestOrderSaveDto requestOrderSaveDto) {
-        // 엔티티 조회
-        Member member = memberRepository.findById(requestOrderSaveDto.getMemberId())
-                .orElseThrow(() -> new NotFoundMemberEntityException(ErrorCode.NOT_FOUND_MEMBER_ENTITY));
+        // 조회
+        Member member = findMemberEntity(requestOrderSaveDto);
+        Item item = findItemEntity(requestOrderSaveDto);
 
-        Item item = itemRepository.findById(requestOrderSaveDto.getItemId())
-                .orElseThrow(() -> new NotFoundItemEntityException(ErrorCode.NOT_FOUND_ITEM_TYPE));
-
-        // 배송정보 생성
-        Delivery delivery = Delivery.builder()
-                .address(member.getAddress())
-                .status(DeliveryStatus.READY)
-                .build();
-
-        // 주문상품 생성
+        // 생성
+        Delivery delivery = createDelivery(member);
         OrderItem orderItem = OrderItem.createOrderItem(item, requestOrderSaveDto.getOrderQuantity());
-
         Order order = Order.createOrder(member, delivery, List.of(orderItem));
-        Order saveOrder = orderRepository.save(order);
 
+        // 저장
+        Order saveOrder = orderRepository.save(order);
         return new ResponseOrderDto(saveOrder);
+    }
+
+    private static Delivery createDelivery(Member member) {
+        return Delivery.createDelivery(member.getAddress(), DeliveryStatus.READY);
+    }
+
+    private Item findItemEntity(RequestOrderSaveDto requestOrderSaveDto) {
+        return getOptional(itemRepository.findById(requestOrderSaveDto.getItemId()),
+                new NotFoundItemEntityException(ErrorCode.NOT_FOUND_ITEM_TYPE));
+    }
+
+    private Member findMemberEntity(RequestOrderSaveDto requestOrderSaveDto) {
+        return getOptional(memberRepository.findById(requestOrderSaveDto.getMemberId()),
+                new NotFoundMemberEntityException(ErrorCode.NOT_FOUND_MEMBER_ENTITY));
+    }
+
+    private <T> T getOptional(Optional<T> optional, BusinessException businessException) {
+        return optional.orElseThrow(() -> businessException);
     }
 
     public List<ResponseOrderDto> getOrderList() {
