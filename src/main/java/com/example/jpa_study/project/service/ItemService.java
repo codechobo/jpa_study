@@ -37,10 +37,14 @@ public class ItemService {
         throw new ItemSaveFailException(ErrorCode.ITEM_SAVE_FAIL);
     }
 
+    public ResponseItemSaveDto findItem(Long itemId) {
+        Item item = getOptional(itemRepository.findById(itemId));
+        return new ResponseItemSaveDto(item);
+    }
+
     private Item itemConverter(ServiceItemDto serviceItemDto) {
         return itemConverterList.stream()
-                .filter(itemConverter -> itemConverter.isTypeCheck(serviceItemDto.getItemType()))
-                .filter(itemConverter -> itemConverter.isFieldCheck(serviceItemDto))
+                .filter(itemConverter -> itemConverter.isSupported(serviceItemDto))
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("itemType 을 지원하는 converter 가 존재하지 않습니다"))
                 .convertItem(serviceItemDto);
@@ -55,11 +59,6 @@ public class ItemService {
             throw new ExistsItemInfoException(ErrorCode.EXISTS_ITEM_INFO);
         }
         return true;
-    }
-
-    public ResponseItemSaveDto findItem(Long itemId) {
-        Item item = getOptional(itemRepository.findById(itemId));
-        return new ResponseItemSaveDto(item);
     }
 
     private <T> T getOptional(Optional<T> optional) {

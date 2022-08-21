@@ -2,20 +2,17 @@ package com.example.jpa_study.project.service.item_converter;
 
 import com.example.jpa_study.project.domain.Movie;
 import com.example.jpa_study.project.domain.type.ItemType;
+import com.example.jpa_study.project.error.ErrorCode;
 import com.example.jpa_study.project.service.item_converter.dto.ServiceItemDto;
 import org.springframework.stereotype.Component;
 
 @Component
 public class MovieItemConverter implements ItemConverter {
-    @Override
-    public boolean isTypeCheck(ItemType itemType) {
-        return ItemType.MOVIE.equals(itemType);
-    }
 
     @Override
-    public boolean isFieldCheck(ServiceItemDto serviceItemDto) {
-        if (serviceItemDto.getDirector() == null && serviceItemDto.getActor() == null) {
-            throw new IllegalArgumentException("아템 속성을 잘못 입력했습니다.");
+    public boolean isSupported(ServiceItemDto serviceItemDto) {
+        if (isCheck(serviceItemDto)) {
+            throw new IllegalArgumentException(ErrorCode.ITEM_INFO_BAD_REQUEST.getMessage());
         } else {
             return true;
         }
@@ -24,5 +21,17 @@ public class MovieItemConverter implements ItemConverter {
     @Override
     public Movie convertItem(ServiceItemDto serviceItemDto) {
         return serviceItemDto.toMovieEntity();
+    }
+
+    private static boolean isItemTypeCheck(ServiceItemDto serviceItemDto) {
+        return ItemType.ALBUM.equals(serviceItemDto.getItemType());
+    }
+
+    private boolean isExistsFieldsCheck(ServiceItemDto serviceItemDto) {
+        return serviceItemDto.getEtc() != null && serviceItemDto.getArtist() != null;
+    }
+
+    private boolean isCheck(ServiceItemDto serviceItemDto) {
+        return isItemTypeCheck(serviceItemDto) && isExistsFieldsCheck(serviceItemDto);
     }
 }
