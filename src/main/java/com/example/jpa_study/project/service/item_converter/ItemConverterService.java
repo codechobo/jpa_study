@@ -5,10 +5,10 @@ import com.example.jpa_study.project.service.item_converter.dto.ServiceItemDto;
 
 public interface ItemConverterService  {
 
-    private boolean isItemTypeCheck(ServiceItemDto serviceItemDto) {
+    default boolean isItemTypeCheck(ServiceItemDto serviceItemDto) {
         return ItemType.ALBUM.equals(serviceItemDto.getItemType());
     }
 
-    public boolean isExistsFieldsCheck(ServiceItemDto serviceItemDto);
+    boolean isExistsFieldsCheck(ServiceItemDto serviceItemDto);
 
 }

@@ -23,12 +23,14 @@ public class BookItemConverter implements ItemConverter {
         return serviceItemDto.toBookEntity();
     }
 
-    private boolean isItemTypeCheck(ServiceItemDto serviceItemDto) {
-        return ItemType.ALBUM.equals(serviceItemDto.getItemType());
+    @Override
+    public boolean isExistsFieldsCheck(ServiceItemDto serviceItemDto) {
+        return serviceItemDto.getEtc() != null && serviceItemDto.getArtist() != null;
     }
 
-    private boolean isExistsFieldsCheck(ServiceItemDto serviceItemDto) {
-        return serviceItemDto.getEtc() != null && serviceItemDto.getArtist() != null;
+    @Override
+    public boolean isItemTypeCheck(ServiceItemDto serviceItemDto) {
+        return ItemType.ALBUM.equals(serviceItemDto.getItemType());
     }
 
     private boolean isCheck(ServiceItemDto serviceItemDto) {
