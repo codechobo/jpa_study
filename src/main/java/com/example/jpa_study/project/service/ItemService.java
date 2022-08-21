@@ -3,8 +3,6 @@ package com.example.jpa_study.project.service;
 import com.example.jpa_study.project.domain.Item;
 import com.example.jpa_study.project.domain.repository.ItemRepository;
 import com.example.jpa_study.project.error.ErrorCode;
-import com.example.jpa_study.project.error.exception.ExistsItemInfoException;
-import com.example.jpa_study.project.error.exception.ItemSaveFailException;
 import com.example.jpa_study.project.error.exception.NotFoundItemEntityException;
 import com.example.jpa_study.project.service.item_converter.ItemConverter;
 import com.example.jpa_study.project.service.item_converter.dto.ServiceItemDto;
@@ -26,15 +24,11 @@ public class ItemService {
 
     @Transactional
     public ResponseItemSaveDto saveItem(RequestItemSaveDto requestItemSaveDto) {
-        if (isNotExistsItem(requestItemSaveDto)) {
-            ServiceItemDto serviceItemDto = createServiceItemDto(requestItemSaveDto);
+        ServiceItemDto serviceItemDto = createServiceItemDto(requestItemSaveDto);
 
-            Item item = itemConverter(serviceItemDto);
-
-            Item saveItem = itemRepository.save(item);
-            return new ResponseItemSaveDto(saveItem);
-        }
-        throw new ItemSaveFailException(ErrorCode.ITEM_SAVE_FAIL);
+        Item item = itemConverter(serviceItemDto);
+        Item saveItem = itemRepository.save(item);
+        return new ResponseItemSaveDto(saveItem);
     }
 
     public ResponseItemSaveDto findItem(Long itemId) {
@@ -52,13 +46,6 @@ public class ItemService {
 
     private ServiceItemDto createServiceItemDto(RequestItemSaveDto requestItemSaveDto) {
         return new ServiceItemDto(requestItemSaveDto);
-    }
-
-    private boolean isNotExistsItem(RequestItemSaveDto dto) {
-        if (itemRepository.existsByName(dto.getName())) {
-            throw new ExistsItemInfoException(ErrorCode.EXISTS_ITEM_INFO);
-        }
-        return true;
     }
 
     private <T> T getOptional(Optional<T> optional) {

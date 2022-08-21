@@ -41,6 +41,12 @@ public class OrderService {
         return new ResponseOrderDto(saveOrder);
     }
 
+    public List<ResponseOrderDto> getOrderList() {
+        return orderRepository.findAll().stream()
+                .map(ResponseOrderDto::new)
+                .collect(Collectors.toList());
+    }
+
     private Item findItemEntity(RequestOrderSaveDto requestOrderSaveDto) {
         return getOptional(itemRepository.findById(requestOrderSaveDto.getItemId()),
                 new NotFoundItemEntityException(ErrorCode.NOT_FOUND_ITEM_TYPE));
@@ -53,12 +59,6 @@ public class OrderService {
 
     private <T> T getOptional(Optional<T> optional, BusinessException businessException) {
         return optional.orElseThrow(() -> businessException);
-    }
-
-    public List<ResponseOrderDto> getOrderList() {
-        return orderRepository.findAll().stream()
-                .map(ResponseOrderDto::new)
-                .collect(Collectors.toList());
     }
 
     @Transactional

@@ -15,6 +15,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 
+@NamedEntityGraph(
+        name = "order-entity-graph",
+        attributeNodes = {
+                @NamedAttributeNode("member"),
+                @NamedAttributeNode(value = "orderItems", subgraph = "orderItems-subgraph"),
+                @NamedAttributeNode("delivery"),
+        },
+        subgraphs = {
+                @NamedSubgraph(name = "orderItems-subgraph",
+                        attributeNodes = {@NamedAttributeNode("item")})})
 @Getter
 @NoArgsConstructor
 @Table(name = "ORDERS")
