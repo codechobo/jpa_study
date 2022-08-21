@@ -44,7 +44,7 @@ public class ItemService {
 
     private Item itemConverter(ServiceItemDto serviceItemDto) {
         return itemConverterList.stream()
-                .filter(itemConverter -> itemConverter.isSupported(serviceItemDto))
+                .filter(itemConverterList -> itemConverterList.isSupported(serviceItemDto))
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("itemType 을 지원하는 converter 가 존재하지 않습니다"))
                 .convertItem(serviceItemDto);
